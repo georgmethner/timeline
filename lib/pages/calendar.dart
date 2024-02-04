@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../components/appbar.dart';
 import '../components/day.dart';
 
 class Calendar extends StatelessWidget {
@@ -13,15 +12,12 @@ class Calendar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final month_length = [31, (cur_date.year/4.0)==(cur_date.year/4.0).roundToDouble() ? 29 : 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
-
     for (var i = 0; i < 35; i++) {
       DateTime date = DateTime.utc(cur_date.year, cur_date.month, i+1);
-      children.add(JobEntry(date: date));
+      children.add(Day(date: date, entries: [],));
     }
 
     return Scaffold(
-      appBar: Appbar(),
       body: Center(
         child: GridView.count(
           crossAxisCount: 7,

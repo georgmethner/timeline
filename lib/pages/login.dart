@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 import 'package:service_reddit_2/components/customSnackBar.dart';
 import 'package:service_reddit_2/main.dart';
 import 'package:service_reddit_2/pages/register.dart';
 
 class Login extends StatefulWidget {
-  Login({super.key});
+  const Login({super.key});
 
   @override
   State<Login> createState() => _LoginState();
@@ -19,7 +18,7 @@ class _LoginState extends State<Login> {
 
   Future<void> loginAccount() async {
     try {
-      UserCredential userCredential = await FirebaseAuth.instance
+      await FirebaseAuth.instance
           .signInWithEmailAndPassword(email: email, password: password);
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
@@ -50,6 +49,7 @@ class _LoginState extends State<Login> {
         height: 620,
         width: 500,
         padding: const EdgeInsets.only(top: 30, left: 60, right: 57, bottom: 14),
+        margin: const EdgeInsets.symmetric(horizontal: 10),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(5),
           border: Border.all(width: 1.5, color: Theme.of(context).colorScheme.outline),

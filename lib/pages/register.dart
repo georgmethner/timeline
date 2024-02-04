@@ -1,12 +1,13 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 import 'package:service_reddit_2/components/customSnackBar.dart';
-import 'package:service_reddit_2/main.dart';
 import 'package:service_reddit_2/pages/login.dart';
+import 'package:service_reddit_2/pages/scroll_calendar.dart';
+import 'package:service_reddit_2/utilities/entry_manager.dart';
 
 class Register extends StatefulWidget {
-  Register({super.key});
+  const Register({super.key});
 
   @override
   State<Register> createState() => _RegisterState();
@@ -16,12 +17,15 @@ class _RegisterState extends State<Register> {
   String email = "";
   String password = "";
   String output = "";
+  final db = FirebaseFirestore.instance;
 
   Future<void> RegisterAccount() async {
     try {
-      UserCredential userCredential = await FirebaseAuth.instance
+      await FirebaseAuth.instance
           .createUserWithEmailAndPassword(email: email, password: password);
+
     } on FirebaseAuthException catch (e) {
+      print(e.code);
       if (e.code == 'weak-password') {
         setState(() {
           output = 'Passwort zu schwach.';
@@ -39,11 +43,14 @@ class _RegisterState extends State<Register> {
     FirebaseAuth.instance.authStateChanges().listen((User? user) {
       if (user != null) {
         output = "Account wurde erstellt";
-        Navigator.push(context, MaterialPageRoute(builder: (_) => HomePage()));
+        
+        //TEST
+        EntryManager.set_user("Georg Methner", 2004);
+        
+        Navigator.push(context, MaterialPageRoute(builder: (_) => ScrollCalendar()));
       }
     });
     CustomSnackBar.show(context, output);
-
   }
 
   @override
@@ -54,6 +61,7 @@ class _RegisterState extends State<Register> {
         height: 620,
         width: 500,
         padding: const EdgeInsets.only(top: 30, left: 60, right: 57, bottom: 14),
+        margin: const EdgeInsets.symmetric(horizontal: 10),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(5),
           border: Border.all(width: 1.5, color: Theme.of(context).colorScheme.outline),
@@ -83,13 +91,13 @@ class _RegisterState extends State<Register> {
               Column(
                 children: <Widget>[
                   Padding(
-                    padding: EdgeInsets.symmetric(vertical: 6),
+                    padding: const EdgeInsets.symmetric(vertical: 6),
                     child: SizedBox(
                         width: 300,
                         height: 35,
                         child: ElevatedButton(
                           onPressed: RegisterAccount,
-                          child: Text("Sign Up with Google"),
+                          child: const Text("Sign Up with Google"),
                         )),
                   ),
                   SizedBox(
@@ -97,7 +105,7 @@ class _RegisterState extends State<Register> {
                       height: 35,
                       child: ElevatedButton(
                         onPressed: RegisterAccount,
-                        child: Text("Sign Up with Apple"),
+                        child: const Text("Sign Up with Apple"),
                       )),
                 ],
               ),
@@ -132,7 +140,7 @@ class _RegisterState extends State<Register> {
                     ),
                   ),
                   Padding(
-                    padding: EdgeInsets.symmetric(vertical: 16.0),
+                    padding: const EdgeInsets.symmetric(vertical: 16.0),
                     child: TextFormField(
                       onChanged: (text) {
                         password = text;
@@ -145,14 +153,13 @@ class _RegisterState extends State<Register> {
                     ),
                   ),
                   Padding(
-                      padding: EdgeInsets.only(bottom: 10, left: 2),
+                      padding: const EdgeInsets.only(bottom: 10, left: 2),
                       child:
                           Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: <Widget>[
                         InkWell(
-                          child: Text("Schon registriert? Log In"),
+                          child: const Text("Schon registriert? Log In"),
                           onTap: () {
-                            Navigator.push(context, MaterialPageRoute(builder: (_) => Login()));
-
+                            Navigator.push(context, MaterialPageRoute(builder: (_) => const Login()));
                           },
                         ),
                         Text(output)
@@ -169,7 +176,7 @@ class _RegisterState extends State<Register> {
                         onPressed: () {
                           RegisterAccount();
                         },
-                        child: Text("Sign Up")),
+                        child: const Text("Sign Up")),
                   ),
                 ],
               ),

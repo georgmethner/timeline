@@ -38,6 +38,10 @@ dependencies:
   firebase_core: ^2.24.2
   firebase_auth: ^4.16.0
   google_sign_in: 6.1.6
+  scrollable_positioned_list: ^0.3.8
+  cloud_firestore: ^4.14.0
+  intl: any
+
 
 dev_dependencies:
   flutter_test:

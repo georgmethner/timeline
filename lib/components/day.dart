@@ -1,35 +1,28 @@
 import 'package:flutter/material.dart';
 
-class JobEntry extends StatelessWidget {
-  JobEntry({super.key, required this.date});
+import 'entry.dart';
+
+class Day extends StatelessWidget {
+  const Day({super.key, required this.date, required this.entries});
 
   final DateTime date;
+  final List<Entry> entries;
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        print('MyButton was tapped!');
-      },
-      child: Container(
-        margin: EdgeInsets.symmetric(vertical: 8.0, horizontal: 5.0),
-        padding: const EdgeInsets.only(top: 12, left: 15, right: 12, bottom: 14),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(5),
-          border: Border.all(width: 1.5, color: Theme.of(context).colorScheme.outline),
-        ),
-        child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              //Information
-              Row(mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[
-                Text(date.day.toString(),
-                  style: Theme.of(context).textTheme.bodyLarge,
-                ),
-              ]),
-            ]),
-      ),
-    );
+    return GestureDetector(child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: <Widget>[
+          //Information
+          const Divider(
+            height: 0,
+            thickness: 1,
+          ),
+          Padding(padding: const EdgeInsets.only(left:5), child: Row(
+            children: entries,
+          )),
+
+        ]));
   }
 }
