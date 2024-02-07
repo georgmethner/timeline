@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:service_reddit_2/components/day_details.dart';
 
 import 'entry.dart';
 
@@ -10,9 +11,13 @@ class Day extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(child: Column(
+    return InkWell(
+        onTap: () {
+          DayDetails.showDayDetails(context, entries, date);
+        },
+        child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
-        crossAxisAlignment: CrossAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           //Information
           const Divider(

@@ -4,6 +4,8 @@ import 'package:service_reddit_2/components/customSnackBar.dart';
 import 'package:service_reddit_2/main.dart';
 import 'package:service_reddit_2/pages/register.dart';
 
+import '../utilities/entry_manager.dart';
+
 class Login extends StatefulWidget {
   const Login({super.key});
 
@@ -31,9 +33,11 @@ class _LoginState extends State<Login> {
         });
       }
     }
-    FirebaseAuth.instance.authStateChanges().listen((User? user) {
+    FirebaseAuth.instance.authStateChanges().listen((User? user) async {
       if (user != null) {
         output = "Log In erfolgreich.";
+        await EntryManager.start();
+
         Navigator.push(context, MaterialPageRoute(builder: (_) => const HomePage()));
       }
     });

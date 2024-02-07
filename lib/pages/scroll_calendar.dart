@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
+import 'package:flutter_list_view/flutter_list_view.dart';
 import 'package:service_reddit_2/components/year.dart';
+
+import '../utilities/entry_manager.dart';
 
 class ScrollCalendar extends StatelessWidget {
   ScrollCalendar({super.key});
@@ -8,25 +10,39 @@ class ScrollCalendar extends StatelessWidget {
   static T? cast<T>(x) => x is T ? x : null;
 
   final cur_date = DateTime.now();
-  final int start_year = 2004;
 
   @override
   Widget build(BuildContext context) {
-    final page_controller = ItemScrollController();
-    final item_count = (cur_date.year - start_year) + 5;
+    final page_controller = FlutterListViewController();
+    final item_count = (cur_date.year - EntryManager.birthyear) + 2;
+    //final item_count = 1;
 
     return Scaffold(
-        body: ScrollablePositionedList.builder(
+        body: FlutterListView(
           scrollDirection: Axis.vertical,
-          itemScrollController: page_controller,
-          shrinkWrap: true,
-          itemBuilder: (context, i) {
-            int cur_year = start_year + i;
+          controller: page_controller,
+          cacheExtent: 50,
+          delegate: SliverChildBuilderDelegate(
+          (context, i) {
+            int cur_year = EntryManager.birthyear + i;
+            return FutureBuilder(
+              future: EntryManager.get_year(i),
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  return Year(date: DateTime(cur_year));
+                } else if (snapshot.hasError) {
+                  return Text('${snapshot.error}');
+                }
 
-            return Year(date: DateTime(cur_year));
-            //return Text("$month_date $i");
+                // By default, show a loading spinner.
+                return SizedBox(height: 10000,);
+              },
+
+            );
+
           },
-          itemCount: item_count,
+            childCount: item_count,
+          ),
         ),
         bottomNavigationBar: const BottomAppBar(
           child: Text(
@@ -36,8 +52,8 @@ class ScrollCalendar extends StatelessWidget {
         floatingActionButton: FloatingActionButton(
           tooltip: 'Increment',
           onPressed: () {
-            int x = (cur_date.year - start_year);
-            page_controller.jumpTo(index: x);
+            int x = (cur_date.year - EntryManager.birthyear);
+            page_controller.sliverController.jumpToIndex(x, offset: -(0.0833), offsetBasedOnBottom: true);
 
             //EntryManager.add_entry("Kinderarzt", DateTime(2023, 6, 15), 0);
             //EntryManager.get_year(19);

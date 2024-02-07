@@ -40,13 +40,16 @@ class _RegisterState extends State<Register> {
         });
       }
     }
-    FirebaseAuth.instance.authStateChanges().listen((User? user) {
+    FirebaseAuth.instance.authStateChanges().listen((User? user) async {
       if (user != null) {
-        output = "Account wurde erstellt";
+        setState(() {
+          output = "Account wurde erstellt";
+        });
         
         //TEST
-        EntryManager.set_user("Georg Methner", 2004);
-        
+        await EntryManager.set_user("Georg Methner", 2004);
+        await EntryManager.start();
+
         Navigator.push(context, MaterialPageRoute(builder: (_) => ScrollCalendar()));
       }
     });

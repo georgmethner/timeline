@@ -10,6 +10,7 @@ import 'day.dart';
 class Month extends StatelessWidget {
   Month({super.key, required this.date, required this.month_length});
 
+  Map<String, dynamic> month_data = <String, dynamic>{};
   final DateTime date;
   final int month_length;
 
@@ -22,18 +23,24 @@ class Month extends StatelessWidget {
       List<Entry> entries = <Entry>[];
       entries.add(Entry(name: day.day.toString(), color: Theme.of(context).primaryColor));
 
-      DateFormat formatter = DateFormat('yyyy-MM-dd');
-      if (formatter.format(day) == formatter.format(DateTime.now())) {
-        print(Colors.primaries[Random().nextInt(Colors.primaries.length)]);
-        entries.add(Entry(
-          name: "Heute",
-          color: Colors.primaries[Random().nextInt(Colors.primaries.length)],
-        ));
-        entries.add(Entry(
-            name: "test1", color: Colors.primaries[Random().nextInt(Colors.primaries.length)]));
-        entries.add(Entry(
-            name: "test2", color: Colors.primaries[Random().nextInt(Colors.primaries.length)]));
+      if (DateTime.now().year == date.year) {
+        DateFormat formatter = DateFormat('yyyy-MM-dd');
+        if (formatter.format(day) == formatter.format(DateTime.now())) {
+          entries.add(Entry(
+            name: "Heute",
+            color: Colors.primaries[Random().nextInt(Colors.primaries.length)],
+          ));
+        }
       }
+
+      month_data.forEach((key, value) {
+        if (int.parse(key) == i + 1) {
+          Entry entry = Entry(
+              name: value["title"],
+              color: Colors.primaries[Random().nextInt(Colors.primaries.length)]);
+          entries.add(entry);
+        }
+      });
 
       days.add(Day(
         date: day,
@@ -45,10 +52,11 @@ class Month extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
+        Expanded(
+            child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
               const Divider(
                 height: 0,
               ),
@@ -61,8 +69,8 @@ class Month extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: days,
               ),
-            ]),
-        Expanded(child: LongEntry(from: DateTime.now(), to: DateTime.now(), name: "test")),
+            ])),
+        LongEntry(from: DateTime.now(), to: DateTime.now(), name: "test"),
       ],
     );
   }

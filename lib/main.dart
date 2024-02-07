@@ -2,12 +2,15 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/date_symbol_data_local.dart';
 import 'package:service_reddit_2/pages/login.dart';
 import 'package:service_reddit_2/pages/scroll_calendar.dart';
+import 'package:service_reddit_2/utilities/entry_manager.dart';
 
 import 'firebase_options.dart';
 
 Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
 
   //Initialize Firebase
   await Firebase.initializeApp(
@@ -15,8 +18,11 @@ Future<void> main() async {
   );
   await FirebaseAuth.instance.useAuthEmulator('localhost', 9099);
   FirebaseFirestore.instance.useFirestoreEmulator('localhost', 8080);
+  FirebaseFirestore.instance.enablePersistence(const PersistenceSettings(synchronizeTabs: true));
 
-  WidgetsFlutterBinding.ensureInitialized();
+  initializeDateFormatting("de");
+
+  await EntryManager.start();
 
   runApp(const App());
 }
@@ -40,11 +46,6 @@ class App extends StatelessWidget {
             headlineSmall: TextStyle(fontWeight: FontWeight.bold, color: Color(0xFFAAE78B))),
         useMaterial3: true,
       ),
-      supportedLocales: const [
-        Locale('de'), // Deutsch
-        Locale('en'), // English
-      ],
-      locale: const Locale('de'), // Deutsch
       home: const HomePage(),
     );
   }
@@ -55,6 +56,6 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return FirebaseAuth.instance.currentUser != null ? ScrollCalendar() : Login();
+    return FirebaseAuth.instance.currentUser != null ? ScrollCalendar() : const Login();
   }
 }
